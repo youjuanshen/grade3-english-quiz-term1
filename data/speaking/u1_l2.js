@@ -1,7 +1,7 @@
 /**
  * Speaking Part: Unit 1 Lesson 2 - What’s your name, please?
  * File: data/speaking/u1_l2.js
- * * 核心目标：问候、询问姓名、自我介绍、词汇识别 (cat/dog)、社交回应
+ * 核心目标：问候、询问姓名、自我介绍、词汇识别 (cat/dog)、社交回应
  */
 window.LOAD_SPEAKING_QUIZ({
     title: "Unit 1 Lesson 2: What’s your name, please? (口语)",
@@ -27,10 +27,10 @@ window.LOAD_SPEAKING_QUIZ({
             expectedAnswer: "My name is [学生名字]. / I’m [学生名字]."
         },
         {
-            qNum: 3, // 修正后：替换为词汇识别 (cat/dog)
+            qNum: 3, 
             score: 5,
             text: '看图，说出图中动物的英文单词（cat或dog）。<br><span style="font-size:14px;color:#666">（Look and say the word for the animal.）</span>',
-            imageUri: 'u1_l2_cat.png', 
+            imageUri: 'u1_l2_cat.png', // 注意：实际测试中教师可能需要准备 cat 和 dog 两张图
             teacherPrompt: "（教师指着猫或狗的图片）What’s this?",
             expectedAnswer: "It’s a cat. / It’s a dog. / A cat. / A dog."
         },
