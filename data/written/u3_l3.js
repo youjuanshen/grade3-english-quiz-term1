@@ -4,30 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>U3 L3 测验数据审校 (Show me red, please.)</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ❌ 移除了可能导致卡顿的 Tailwind CDN -->
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #1f2937; padding: 20px; }
-        .header-badge { background-color: #166534; color: white; padding: 5px 10px; border-radius: 4px; font-size: 0.8rem; vertical-align: middle; margin-left: 10px; }
-        .section-header { border-bottom: 3px solid #16a34a; padding-bottom: 5px; margin-bottom: 20px; font-size: 1.5rem; font-weight: 700; color: #14532d; margin-top: 40px; }
-        .question-card { background-color: #ffffff; border: 1px solid #bbf7d0; border-left: 6px solid #22c55e; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .q-meta { font-size: 0.875rem; font-weight: 600; color: #65a30d; margin-bottom: 12px; display: flex; justify-content: space-between; }
-        .q-text { font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px dashed #e5e7eb; padding-bottom: 10px; color: #111827; }
-        .q-answer { background-color: #f0fdf4; color: #15803d; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 1rem; margin-top: 15px; border: 1px solid #86efac; display: flex; align-items: start; }
-        .q-detail { font-size: 0.9rem; color: #374151; margin-bottom: 6px; background: #f9fafb; padding: 8px; border-radius: 4px; }
-        .change-log { background: #fffbeb; border: 1px solid #fcd34d; padding: 15px; border-radius: 8px; margin-bottom: 30px; font-size: 0.9rem; color: #92400e; }
+        /* ✅ 替换为原生 CSS，确保零依赖秒开 */
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+            background-color: #f0fdf4; 
+            color: #1f2937; 
+            padding: 20px; 
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1.title {
+            font-size: 1.875rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        .header-badge { 
+            background-color: #166534; 
+            color: white; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 0.8rem; 
+            vertical-align: middle; 
+            margin-left: 10px; 
+            font-weight: normal;
+        }
+        .change-log { 
+            background: #fffbeb; 
+            border: 1px solid #fcd34d; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 30px; 
+            font-size: 0.9rem; 
+            color: #92400e; 
+        }
+        .change-log ul {
+            margin-top: 0.5rem;
+            padding-left: 1.25rem;
+            list-style-type: disc;
+        }
+        .change-log li {
+            margin-bottom: 0.25rem;
+        }
+        .section-header { 
+            border-bottom: 3px solid #16a34a; 
+            padding-bottom: 5px; 
+            margin-bottom: 20px; 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: #14532d; 
+            margin-top: 40px; 
+        }
+        .question-card { 
+            background-color: #ffffff; 
+            border: 1px solid #bbf7d0; 
+            border-left: 6px solid #22c55e; 
+            border-radius: 8px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+        }
+        .q-meta { 
+            font-size: 0.875rem; 
+            font-weight: 600; 
+            color: #65a30d; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+        }
+        .q-text { 
+            font-size: 1.1rem; 
+            margin-bottom: 15px; 
+            border-bottom: 1px dashed #e5e7eb; 
+            padding-bottom: 10px; 
+            color: #111827; 
+        }
+        .q-detail { 
+            font-size: 0.9rem; 
+            color: #374151; 
+            margin-bottom: 6px; 
+            background: #f9fafb; 
+            padding: 8px; 
+            border-radius: 4px; 
+            word-break: break-all;
+        }
+        .q-answer { 
+            background-color: #f0fdf4; 
+            color: #15803d; 
+            padding: 10px; 
+            border-radius: 6px; 
+            font-weight: 700; 
+            font-size: 1rem; 
+            margin-top: 15px; 
+            border: 1px solid #86efac; 
+            display: flex; 
+            align-items: flex-start; 
+        }
+        code {
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            background-color: rgba(0,0,0,0.05);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
     </style>
 </head>
 <body>
 
-<div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-extrabold text-center mb-4 text-gray-900">
+<div class="container">
+    <h1 class="title">
         Unit 3 Lesson 3: Show me red, please.
         <span class="header-badge">审校模式</span>
     </h1>
 
     <div class="change-log">
         <strong>🛠️ 本次修正记录 (Correction Log):</strong>
-        <ul class="list-disc pl-5 mt-2 space-y-1">
+        <ul>
+            <li><strong>网络优化:</strong> 移除外部 CSS 库，解决“读取文件”卡顿问题，实现秒开。</li>
             <li><strong>修正标题:</strong> 恢复为 Lesson 3 "Show me red, please."。</li>
             <li><strong>修正数据:</strong> 替换回 L3 的核心词汇 (文具+颜色) 和句型 (Show me...)。</li>
             <li><strong>题型确认:</strong> Part C 保持为“连词成句” (Drag-sort)，Part A/B 保持 Iron Rules 格式。</li>
