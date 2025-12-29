@@ -6,12 +6,8 @@
 window.LOAD_QUIZ({
     title: "Unit 3 Lesson 3: Show me red, please.",
     timeLimit: 540, // 9 minutes
-// ==========================================
-// 🔊 音频播放引擎 (Text-to-Speech Engine)
-// ==========================================
 
     // ⛔️ IMPORTANT: No top-level 'images' object. System auto-adds 'img/' prefix.
-const synth = window.speechSynthesis;
 
     questions: [
         // ===========================
@@ -124,9 +120,6 @@ const synth = window.speechSynthesis;
             options: ['A. blue', 'B. red', 'C. black', 'D. white'], 
             correct: 'A. blue' 
         },
-// 播放音频的核心函数
-function playAudio(text) {
-    if (!text) return;
 
         // ===========================
         // Part C: Writing (Target: 25 pts)
@@ -177,6 +170,17 @@ function playAudio(text) {
             correct: 'Show me green .' 
         }
     ]
+});
+// ==========================================
+// 🔊 音频播放引擎 (Text-to-Speech Engine)
+// ==========================================
+
+const synth = window.speechSynthesis;
+
+// 播放音频的核心函数
+function playAudio(text) {
+    if (!text) return;
+
     // 1. 停止当前正在播放的声音（防止重叠）
     if (synth.speaking) {
         synth.cancel();
