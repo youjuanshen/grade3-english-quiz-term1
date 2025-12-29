@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preview: Unit 3 Lesson 4</title>
+    <title>Unit 3 Lesson 4 智能预览器</title>
     <style>
         :root {
             --primary: #2c3e50;
@@ -13,7 +13,7 @@
             --panel-bg: #ffffff;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', "Microsoft YaHei", sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
@@ -25,25 +25,27 @@
         /* Left Panel: Editor */
         .editor-panel {
             width: 35%;
-            background: #2b2b2b;
+            background: #1e1e1e;
             color: #ddd;
             display: flex;
             flex-direction: column;
             border-right: 1px solid #444;
         }
         .panel-header {
-            padding: 15px;
-            background: #1e1e1e;
-            color: white;
+            padding: 10px 15px;
+            background: #252526;
+            color: #ccc;
+            font-size: 14px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #333;
         }
         textarea {
             flex: 1;
-            background: #2b2b2b;
-            color: #a9b7c6;
+            background: #1e1e1e;
+            color: #d4d4d4;
             border: none;
             padding: 15px;
             font-family: 'Consolas', 'Monaco', monospace;
@@ -53,23 +55,6 @@
             line-height: 1.5;
             white-space: pre;
         }
-        .action-bar {
-            padding: 15px;
-            background: #1e1e1e;
-            text-align: right;
-        }
-        button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-        }
-        button:hover { background: #2980b9; }
-
         /* Right Panel: Preview */
         .preview-panel {
             flex: 1;
@@ -77,6 +62,7 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            background-color: #f0f2f5;
         }
         .preview-controls {
             margin-bottom: 20px;
@@ -92,19 +78,30 @@
             z-index: 10;
         }
         .toggle-btn {
-            background: #ecf0f1;
+            background: #f0f0f0;
             color: #333;
-            padding: 5px 15px;
+            padding: 6px 16px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 0.9rem;
             border: 1px solid #ddd;
+            transition: all 0.2s;
         }
         .toggle-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
+        .run-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .run-btn:hover { background: #219150; }
 
         /* Quiz Content Styles */
         #quizRenderArea {
@@ -149,7 +146,6 @@
             font-weight: bold;
             font-size: 0.8rem;
             color: #95a5a6;
-            text-transform: uppercase;
             margin-right: 8px;
         }
         .audio-text { color: #8e44ad; font-style: italic; background: #f9f0ff; padding: 2px 6px; border-radius: 4px; }
@@ -210,6 +206,16 @@
         .mode-student .opt-box { cursor: pointer; transition: 0.2s; border: 2px solid #eee; }
         .mode-student .opt-box:hover { background: #eef2f7; border-color: #3498db; transform: translateY(-2px); }
 
+        /* Error Message */
+        .error-box {
+            background: #fee;
+            border: 1px solid #f99;
+            color: #c00;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body>
@@ -217,11 +223,11 @@
     <!-- LEFT: Code Editor -->
     <div class="editor-panel">
         <div class="panel-header">
-            <span>U3L4 Code</span>
-            <button onclick="renderQuiz()" style="font-size:0.8rem; padding:4px 10px;">↻ Re-run</button>
+            <span>JS 代码编辑器 (粘贴到此处)</span>
+            <button class="run-btn" onclick="renderQuiz()">▶ 刷新预览</button>
         </div>
         <!-- Pre-filled with the generated code -->
-        <textarea id="codeInput" spellcheck="false">/**
+        <textarea id="codeInput" spellcheck="false" placeholder="在此处粘贴生成的 JS 代码...">/**
  * Unit 3 Lesson 4: Colors & Flowers
  * File: data/written/u3_l4.js
  * Target: Grade 3 Minjiao Edition
@@ -405,42 +411,59 @@ window.LOAD_QUIZ({
     <!-- RIGHT: Preview Area -->
     <div class="preview-panel">
         <div class="preview-controls">
-            <strong>Mode:</strong>
-            <button class="toggle-btn active" onclick="setMode('review')" id="btnReview">👨‍🏫 Review</button>
-            <button class="toggle-btn" onclick="setMode('student')" id="btnStudent">🎒 Student</button>
+            <strong>视图模式:</strong>
+            <button class="toggle-btn active" onclick="setMode('review')" id="btnReview">👨‍🏫 教师审校</button>
+            <button class="toggle-btn" onclick="setMode('student')" id="btnStudent">🎒 学生实战</button>
             <span style="flex:1"></span>
-            <span id="quizInfo" style="color:#666; font-size:0.9rem"></span>
+            <span id="quizInfo" style="color:#666; font-size:0.9rem">等待加载...</span>
         </div>
 
         <div id="quizRenderArea" class="mode-review"></div>
     </div>
 
     <script>
+        // Initialize logic
         let currentData = null;
 
-        // Mock LOAD_QUIZ
-        window.LOAD_QUIZ = function(data) {
-            currentData = data;
+        // Mock window environment
+        const mockWindow = {
+            LOAD_QUIZ: function(data) {
+                currentData = data;
+            }
         };
 
         function renderQuiz() {
-            const code = document.getElementById('codeInput').value;
+            const rawCode = document.getElementById('codeInput').value;
             const container = document.getElementById('quizRenderArea');
             const info = document.getElementById('quizInfo');
+            
+            // Clear previous
+            currentData = null;
+            container.innerHTML = '';
+            info.textContent = '处理中...';
 
             try {
-                const safeRunner = new Function(code);
-                safeRunner(); 
+                // 1. SMART CLEANUP: Remove markdown code fences if pasted
+                let cleanCode = rawCode
+                    .replace(/```javascript/gi, '') // Remove start fence
+                    .replace(/```js/gi, '')         // Remove shorthand fence
+                    .replace(/```/g, '');           // Remove end fence
                 
-                if (!currentData) throw new Error("No data found.");
+                // 2. Execute Code safely
+                const safeRunner = new Function('window', cleanCode);
+                safeRunner(mockWindow);
+                
+                if (!currentData) throw new Error("代码格式正确，但未找到数据。\n请确保代码中包含: window.LOAD_QUIZ({ ... })");
+
             } catch (e) {
-                alert("JS Error: " + e.message);
+                container.innerHTML = `<div class="error-box"><strong>❌ 代码解析错误:</strong><br>${e.message}<br><br>建议：请只复制 window.LOAD_QUIZ 开始的部分，或者直接把 Markdown 符号删掉。</div>`;
+                info.textContent = '加载失败';
                 return;
             }
 
-            info.innerHTML = `<strong>${currentData.title}</strong> (${currentData.questions.length} Qs)`;
-            container.innerHTML = '';
-
+            // 3. Render Success
+            info.innerHTML = `<strong>${currentData.title}</strong> (共 ${currentData.questions.length} 题)`;
+            
             currentData.questions.forEach((q) => {
                 const card = document.createElement('div');
                 card.className = `q-card part-${q.part}`;
@@ -455,10 +478,9 @@ window.LOAD_QUIZ({
                     } else if (val.indexOf('.') === -1 && val.indexOf('/') === -1) {
                         src = 'img/' + val + '.png';
                     } else if (!val.includes('/')) {
-                        src = 'img/' + val; // Assume it has extension
+                        src = 'img/' + val; 
                     }
 
-                    // Returns an image that hides itself on error and shows the placeholder box instead
                     return `
                         <div style="margin:5px 0">
                             <img src="${src}" style="display:block" 
@@ -481,7 +503,7 @@ window.LOAD_QUIZ({
                             <span style="color:#333;font-weight:bold">[Part ${q.part}]</span> 
                             <span style="background:#eee;padding:1px 6px;border-radius:4px;font-size:0.8em;margin-left:5px">${q.type}</span>
                         </span>
-                        <span class="review-only" style="font-weight:bold;color:#2c3e50">Score: ${q.score || 5}</span>
+                        <span class="review-only" style="font-weight:bold;color:#2c3e50">${q.score || 5} 分</span>
                     </div>
                 `;
 
@@ -496,7 +518,7 @@ window.LOAD_QUIZ({
                 // --- 4. Audio Script (Review Only) ---
                 if (q.audioText) {
                     html += `<div class="review-only" style="margin-bottom:10px">
-                        <span class="field-label">Audio:</span>
+                        <span class="field-label">听力文稿:</span>
                         <span class="audio-text">🔊 "${q.audioText}"</span>
                     </div>`;
                 }
@@ -517,7 +539,7 @@ window.LOAD_QUIZ({
                 // --- 6. Correct Answer (Review Only) ---
                 html += `
                     <div style="margin-top:15px; padding-top:10px; border-top:1px dashed #ddd;" class="review-only">
-                        <span class="field-label" style="color:#27ae60">Correct Answer:</span>
+                        <span class="field-label" style="color:#27ae60">正确答案:</span>
                         <span class="correct-ans">${q.correct}</span>
                     </div>
                 `;
