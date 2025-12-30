@@ -1,6 +1,6 @@
 // ================= 全局配置 (V13.1 无参考版 - FINAL) =================
 // ⚠️ 请确认这里是您最新的、可用的 Google Script 链接
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztpgqRv_GuGIO1zlciBA0O7LL8hm0iohqtOJ844m8zF5JlTYPXujbULC0oYyNzvJsI/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwX57WBD5UjvhK1WCMZePz2R3tVhywDgtKImnjf_K01UOT3Xw9UqaQrVtmjXbhvomA/exec";
 
 // ✅ 口语评分按钮旁边的文字描述
 const SPEAKING_RUBRIC = [
