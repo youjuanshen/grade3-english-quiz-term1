@@ -83,9 +83,8 @@ window.LOAD_QUIZ({
             part: 'B', 
             type: 'select', 
             score: 5,
-            text: '选词填空。<br><span style="font-size:14px;color:#666">(Fill in the blank)</span>', 
+            text: '选词填空。<br><span style="font-size:14px;color:#666">(Fill in the blank)</span><br><strong>Prompt:</strong> Who is ______?',
             imageUri: 'u4_grandpa.png',
-            prompt: 'Who is ______?',
             options: ['A. he', 'B. she', 'C. it', 'D. they'], 
             correct: 'A. he' 
         },
@@ -94,9 +93,9 @@ window.LOAD_QUIZ({
             part: 'B', 
             type: 'select', 
             score: 5,
-            text: '看图，句子对吗？<br><span style="font-size:14px;color:#666">(True or False)</span>', 
+            // 把原来的 prompt 内容合并到 text 中，确保前端能显示该句子
+            text: '看图，句子对吗？<br><span style="font-size:14px;color:#666">(True or False)</span><br><strong>Sentence:</strong> Blow out the candles.',
             imageUri: 'u4_candle.png',
-            prompt: 'Sentence: Blow out the candles.',
             options: ['A. Yes (对)', 'B. No (错)'], 
             correct: 'A. Yes (对)' 
         },
@@ -114,8 +113,7 @@ window.LOAD_QUIZ({
             part: 'B', 
             type: 'select', 
             score: 5,
-            text: '读句子，选图片。<br><span style="font-size:14px;color:#666">(Read and choose)</span>', 
-            prompt: 'She is my grandma.',
+            text: '读句子，选图片。<br><span style="font-size:14px;color:#666">(Read and choose)</span><br><strong>Sentence:</strong> She is my grandma.',
             options: ['image:u4_grandma', 'image:u4_grandpa', 'image:u4_sister', 'image:u4_mother'], 
             correct: 'image:u4_grandma' 
         },
