@@ -34,7 +34,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '听录音，选出听到的人物。<br><span style="font-size:14px;color:#666">(Who is this?)</span>', 
             audioText: 'This is my sister.', 
-            options: ['image:u4_brother', 'image:u4_father', 'image:u4_sister'], 
+            options: ['image:u4_brother', 'image:u4_father', 'image:u4_sister', 'image:u4_mother'], 
             correct: 'image:u4_sister' 
         },
         { 
@@ -44,7 +44,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '听录音，选出正确的物品。<br><span style="font-size:14px;color:#666">(Listen and choose)</span>', 
             audioText: 'Here is your cake.', 
-            options: ['image:u4_cake', 'image:u4_zoo', 'image:u4_family'], 
+            options: ['image:u4_cake', 'image:u4_zoo', 'image:u4_family', 'image:u4_father'], 
             correct: 'image:u4_cake' 
         },
         { 
@@ -54,7 +54,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '听录音，选出正确的地点。<br><span style="font-size:14px;color:#666">(Where is it?)</span>', 
             audioText: 'Zoo.', 
-            options: ['image:u4_zoo', 'image:u4_cake', 'image:u4_family'], 
+            options: ['image:u4_zoo', 'image:u4_cake', 'image:u4_family', 'image:u4_father'], 
             correct: 'image:u4_zoo' 
         },
         { 
@@ -64,7 +64,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '听录音，选出正确的中文意思。<br><span style="font-size:14px;color:#666">(Chinese Meaning)</span>', 
             audioText: 'This is my father.', 
-            options: ['A. 这是我的爸爸。', 'B. 这是我的妈妈。', 'C. 很高兴见到你。'], 
+            options: ['A. 这是我的爸爸。', 'B. 这是我的妈妈。', 'C. 很高兴见到你。', 'D. 我很好。'], 
             correct: 'A. 这是我的爸爸。' 
         },
 
@@ -78,7 +78,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '看图，选出正确的单词。<br><span style="font-size:14px;color:#666">(Look and choose)</span>', 
             imageUri: 'u4_family.png', 
-            options: ['A. father', 'B. family', 'C. friend'], 
+            options: ['A. father', 'B. family', 'C. friend', 'D. mother'], 
             correct: 'B. family' 
         },
         { 
@@ -89,7 +89,7 @@ window.LOAD_QUIZ({
             text: '选词填空。<br><span style="font-size:14px;color:#666">(Fill in the blank)</span>', 
             imageUri: 'u4_brother.png',
             prompt: 'This is my ______.',
-            options: ['A. brother', 'B. sister', 'C. mother'], 
+            options: ['A. brother', 'B. sister', 'C. mother', 'D. father'], 
             correct: 'A. brother' 
         },
         { 
@@ -98,7 +98,7 @@ window.LOAD_QUIZ({
             type: 'select', 
             score: 5,
             text: '选出不同类的一个。<br><span style="font-size:14px;color:#666">(Odd one out)</span>', 
-            options: ['A. father', 'B. mother', 'C. cake'], 
+            options: ['A. father', 'B. mother', 'C. cake', 'D. sister'], 
             correct: 'C. cake' 
         },
         { 
@@ -108,7 +108,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '根据上句选下句。<br><span style="font-size:14px;color:#666">(Read and respond)</span>', 
             prompt: 'Here is your cake.',
-            options: ['A. Thank you.', 'B. Nice to meet you.', 'C. I am fine.'], 
+            options: ['A. Thank you.', 'B. Nice to meet you.', 'C. I am fine.', 'D. You\'re welcome.'], 
             correct: 'A. Thank you.' 
         },
         { 
@@ -122,6 +122,7 @@ window.LOAD_QUIZ({
             options: ['A. Yes (对)', 'B. No (错)'], 
             correct: 'B. No (错)' 
         },
+
 
 
         // ===========================
@@ -164,7 +165,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '选出拼写正确的单词。<br><span style="font-size:14px;color:#666">(Spelling Check: 妈妈)</span>', 
             imageUri: 'u4_mother.png',
-            options: ['A. mother', 'B. mathor', 'C. mather'], 
+            options: ['A. mother', 'B. mathor', 'C. mather', 'D. mother'], 
             correct: 'A. mother' 
         },
         { 
@@ -174,7 +175,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '选出拼写正确的单词。<br><span style="font-size:14px;color:#666">(Spelling Check: 动物园)</span>', 
             imageUri: 'u4_zoo.png',
-            options: ['A. zo', 'B. zoo', 'C. zuu'], 
+            options: ['A. zo', 'B. zoo', 'C. zuu', 'D. zooo'], 
             correct: 'B. zoo' 
         }
     ]
