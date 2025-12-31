@@ -106,7 +106,7 @@ window.LOAD_QUIZ({
             part: 'B', 
             type: 'select', 
             score: 5,
-            text: '根据上句选下句。<br><span style="font-size:14px;color:#666">(Read and respond)</span><br><strong style="font-size:16px;color:#333">Here is your cake.</strong>', 
+            text: '根据上句选下句。<br><span style="font-size:14px;color:#666">(Read and respond)</span><br><strong>Here is your cake.</strong>', 
             options: ["A. Thank you.", "B. Nice to meet you.", "C. I am fine.", "D. You're welcome."], 
             correct: 'A. Thank you.' 
         },
