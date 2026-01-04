@@ -61,7 +61,7 @@ window.LOAD_QUIZ({
             score: 5,
             text: '听问句，选出正确的答句。<br><span style="font-size:14px;color:#666">(Listen: Who is he?)</span>', 
             audioText: 'Who is he?', 
-            options: ['A. She is my mother.', 'B. He is my father.', 'C. He is my brother.', 'D. She is my sister.'], 
+            options: ['A. She is my mother.', 'B. He is my father.', 'C. She is my brother.', 'D. She is my sister.'], 
             correct: 'B. He is my father.' 
         },
 
