@@ -13,43 +13,45 @@
 </head>
 <body>
 
-<div class="container student-theme">
-    
-    <div id="menuBox" class="card">
-        <h2>📝 笔试挑战</h2>
-        <select id="courseSelect" onchange="loadPaper(this.value)">
-            <option value="" disabled selected>请选择课程...</option>
-            
-            <optgroup label="Unit 1: Hello!">
-                <option value="u1_l1.js">Unit 1 Lesson 1: Nice to meet you</option>
-                <option value="u1_l2.js">Unit 1 Lesson 2: What's your name?</option>
-                <option value="u1_l3.js">Unit 1 Lesson 3: How are you?</option>
-                <option value="u1_l4.js">Unit 1 Lesson 4: Have a good day!</option>
-            </optgroup>
+<div id="menuBox" class="card">
+    <h2>🗣️ 英语测验中心 (Test Center)</h2>
+    <select id="courseSelect" onchange="loadPaper(this.value)">
+        <option value="" disabled selected>请选择考核内容...</option>
+        
+        <optgroup label="Unit 1: Hello!">
+            <option value="u1_l1.js">Unit 1 Lesson 1: Nice to meet you</option>
+            <option value="u1_l2.js">Unit 1 Lesson 2: What's your name?</option>
+            <option value="u1_l3.js">Unit 1 Lesson 3: How are you?</option>
+            <option value="u1_l4.js">Unit 1 Lesson 4: Have a good day!</option>
+        </optgroup>
 
-            <optgroup label="Unit 2: Numbers">
-                <option value="u2_l1.js">Unit 2 Lesson 1: Let's play!</option>
-                <option value="u2_l2.js">Unit 2 Lesson 2: How many ducks?</option>
-                <option value="u2_l3.js">Unit 2 Lesson 3: How old are you?</option>
-                <option value="u2_l4.js">Unit 2 Lesson 4: Phone number</option>
-            </optgroup>
+        <optgroup label="Unit 2: Numbers">
+            <option value="u2_l1.js">Unit 2 Lesson 1: Let's play!</option>
+            <option value="u2_l2.js">Unit 2 Lesson 2: How many ducks?</option>
+            <option value="u2_l3.js">Unit 2 Lesson 3: How old are you?</option>
+            <option value="u2_l4.js">Unit 2 Lesson 4: Phone number</option>
+        </optgroup>
 
-            <optgroup label="Unit 3: Colors">
-                <option value="u3_l1.js?v=fix_img_01">Unit 3 Lesson 1: It's green</option>
-                <option value="u3_l2.js">Unit 3 Lesson 2: What color is it?</option>
-                <option value="u3_l3.js">Unit 3 Lesson 3: Show me red</option>
-                <option value="u3_l4.js">Unit 3 Lesson 4: Colorful flowers</option>
-            </optgroup>
+        <optgroup label="Unit 3: Colors">
+            <option value="u3_l1.js">Unit 3 Lesson 1: It's green</option>
+            <option value="u3_l2.js">Unit 3 Lesson 2: What color is it?</option>
+            <option value="u3_l3.js">Unit 3 Lesson 3: Show me red</option>
+            <option value="u3_l4.js">Unit 3 Lesson 4: Colorful flowers</option>
+        </optgroup>
 
-            <optgroup label="Unit 4: Family">
-                <option value="u4_l1.js">Unit 4 Lesson 1: My father</option>
-                <option value="u4_l2.js">Unit 4 Lesson 2: Who is he?</option>
-                <option value="u4_l3.js">Unit 4 Lesson 3: Who are they?</option>
-                <option value="u4_l4.js">Unit 4 Lesson 4: I love my family</option>
-            </optgroup>
-        </select>
-        </div>
+        <optgroup label="Unit 4: Family">
+            <option value="u4_l1.js">Unit 4 Lesson 1: My father</option>
+            <option value="u4_l2.js">Unit 4 Lesson 2: Who is he?</option>
+            <option value="u4_l3.js">Unit 4 Lesson 3: Who are they?</option>
+            <option value="u4_l4.js">Unit 4 Lesson 4: I love my family</option>
+        </optgroup>
 
+        <optgroup label="⭐️ 期末测评 (Final Exams)">
+            <option value="data/written/G3_Final_Exam_Written.js">📝 Unit 1-4 期末笔试 (Written Exam)</option>
+        </optgroup>
+
+    </select>
+</div>
     <div id="loadingBox" class="hidden text-center">
         <p>正在读取试卷...</p>
     </div>
