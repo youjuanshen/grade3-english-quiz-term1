@@ -145,6 +145,14 @@
     <option value="review 2">Review 2</option>
     <option value="期末">期末综合测验 (Written & Speaking)</option>
   </select>
+
+  <label style="margin-top: 4px;">🎯 选择要检查的测试类型</label>
+  <select id="examTypeSelect">
+    <option value="all">查看全部 (只要做过其中一项就算已考)</option>
+    <option value="written" selected>仅查笔试 (找出缺考【笔试】的学生)</option>
+    <option value="speaking">仅查口语 (找出缺考【口语】的学生)</option>
+  </select>
+
   <button class="btn-query" onclick="query()">🔍 查询缺考情况</button>
 </div>
 
@@ -174,6 +182,7 @@ var GAS_PROXY = 'https://script.google.com/macros/s/AKfycbwlQKStdeQNriQX0uH8GEf1
 
 function query() {
   var course = document.getElementById('courseSelect').value;
+  var examType = document.getElementById('examTypeSelect').value;
   if (!course) { alert('请先选择课程！'); return; }
 
   // 显示加载中，带点旋转动画
@@ -190,12 +199,12 @@ function query() {
 
   window[cbName] = function(resp) {
     clearTimeout(timeout);
-    renderResult(resp, course);
+    renderResult(resp, course, examType);
   };
   document.body.appendChild(s);
 }
 
-function renderResult(resp, course) {
+function renderResult(resp, course, examType) {
   if (!resp || resp.code !== 0) {
     document.getElementById('output').innerHTML = '<div class="loading">❌ 查询失败: ' + (resp && resp.msg || '未知错误') + '</div>';
     return;
@@ -216,7 +225,6 @@ function renderResult(resp, course) {
     // 排查无关记录
     if (rowCourse.indexOf('下学期') >= 0) return; // 这是第一学期查询页面，排除第二学期的测试数据
 
-    // 智能匹配逻辑
     var match = false;
     if (q.indexOf('u') === 0 && q.indexOf('l') > 0) {
       // 匹配 u1l1 格式
@@ -236,6 +244,23 @@ function renderResult(resp, course) {
     }
 
     if (match) {
+      // 判断类型：如果不包含口语相关字样，绝大多数默认为笔试
+      var isSpeaking = false;
+      var isWritten = false;
+
+      if (rowCourse.indexOf('口语') >= 0 || rowCourse.indexOf('口试') >= 0 || rowCourse.indexOf('speaking') >= 0) {
+        isSpeaking = true;
+      } else if (rowCourse.indexOf('笔试') >= 0 || rowCourse.indexOf('written') >= 0) {
+        isWritten = true;
+      } else {
+        // 缺省默认为笔试
+        isWritten = true;
+      }
+
+      // 根据下拉选择来过滤记录
+      if (examType === 'written' && !isWritten) return;
+      if (examType === 'speaking' && !isSpeaking) return;
+
       // 记录最新/最佳的记录
       submitted[name] = { time: formatDate(r.time), rawCourse: r.course };
     }
