@@ -179,17 +179,20 @@ function query() {
   // 显示加载中，带点旋转动画
   document.getElementById('output').innerHTML = '<div class="loading"><span class="spinner">⏳</span> 正在向 Google 表格拉取数据...</div>';
 
-  // 第一学期的 GAS 端已经做了智能匹配，直接传 course={u1l1} 即可
-  var url = GAS_PROXY + '?course=' + encodeURIComponent(course);
+  var s = document.createElement('script');
+  var cbName = 'jsonp_' + new Date().getTime();
+  s.src = GAS_PROXY + '?course=' + encodeURIComponent(course) + '&callback=' + cbName;
   
-  fetch(url)
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
-      renderResult(data, course);
-    })
-    .catch(function(err) {
-      document.getElementById('output').innerHTML = '<div class="loading">❌ 请求超时或网络错误（注意：第一学期查询需要开启 VPN）</div>';
-    });
+  var timeout = setTimeout(function() {
+    document.getElementById('output').innerHTML = '<div class="loading">❌ 请求超时，可能是网络问题或服务端不可访问。请确保连接了VPN。</div>';
+    window[cbName] = function(){};
+  }, 20000);
+
+  window[cbName] = function(resp) {
+    clearTimeout(timeout);
+    renderResult(resp, course);
+  };
+  document.body.appendChild(s);
 }
 
 function renderResult(resp, course) {
@@ -199,14 +202,41 @@ function renderResult(resp, course) {
   }
 
   var records = resp.data || [];
-  
-  // 记录每个学生提交的最佳/最近一条记录
   var submitted = {};
+  
+  // 课程检索关键词 (例如 "u1l1")
+  var q = course.toLowerCase().replace(/\s/g, ''); 
+  
   records.forEach(function(r) {
-    // GAS端已经帮我们清洗过了纯净的 studentName 和 time
     var name = r.studentName;
-    if (name) {
-      // 如果多次提交，记录格式更好的一条或保留第一条遇见的
+    if (!name) return;
+    
+    var rowCourse = (r.course || "").toLowerCase();
+    
+    // 排查无关记录
+    if (rowCourse.indexOf('下学期') >= 0) return; // 这是第一学期查询页面，排除第二学期的测试数据
+
+    // 智能匹配逻辑
+    var match = false;
+    if (q.indexOf('u') === 0 && q.indexOf('l') > 0) {
+      // 匹配 u1l1 格式
+      var um = rowCourse.match(/unit\s*(\d+)/i);
+      var lm = rowCourse.match(/lesson\s*(\d+)/i);
+      if (um && lm) {
+         var standard = "u" + um[1] + "l" + lm[1];
+         if (standard === q) match = true;
+      }
+    } else if (q.indexOf('review') >= 0) {
+      // 匹配 review 1 格式
+      var rev = q.replace('review', '');
+      if (rowCourse.indexOf('review ' + rev) >= 0 || rowCourse.indexOf('复习') >= 0) match = true;
+    } else if (q.indexOf('期末') >= 0) {
+      // 匹配期末
+      if (rowCourse.indexOf('期末') >= 0 || rowCourse.indexOf('final') >= 0 || rowCourse.indexOf('test') >= 0) match = true;
+    }
+
+    if (match) {
+      // 记录最新/最佳的记录
       submitted[name] = { time: formatDate(r.time), rawCourse: r.course };
     }
   });
