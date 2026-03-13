@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>缺考查询(上学期) · 沈老师</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'PingFang SC', sans-serif;
+    background: #f2f4f7;
+    min-height: 100vh;
+  }
+  .app-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #f2f4f7;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  }
+  .header {
+    background: linear-gradient(135deg, #FF6B6B 0%, #C0392B 100%);
+    color: white;
+    padding: 24px 16px 20px;
+    text-align: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; }
+  .header p { font-size: 13px; opacity: 0.9; font-weight: 300; }
+
+  .controls {
+    background: white;
+    padding: 20px;
+    margin: 12px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .controls label { font-size: 14px; color: #555; display: block; margin-bottom: 8px; font-weight: 600; }
+  .controls select {
+    width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0;
+    border-radius: 12px; font-size: 16px; color: #333;
+    background: #fafafa; margin-bottom: 16px; appearance: none;
+    cursor: pointer; font-weight: 500;
+    transition: border-color 0.2s;
+  }
+  .controls select:focus { border-color: #FF6B6B; outline: none; }
+  
+  .btn-query {
+    width: 100%; padding: 15px; background: linear-gradient(135deg, #FF6B6B, #C0392B);
+    color: white; border: none; border-radius: 12px; font-size: 16px;
+    font-weight: 700; cursor: pointer; letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+    transition: transform 0.1s;
+  }
+  .btn-query:active { transform: scale(0.98); }
+
+  .loading { text-align: center; padding: 40px; color: #888; font-size: 15px; }
+  .loading .spinner { display: inline-block; margin-right: 8px; animation: spin 1s linear infinite; }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  .summary-cards {
+    display: flex; gap: 12px; margin: 0 12px 16px;
+  }
+  .card {
+    flex: 1; border-radius: 16px; padding: 16px 10px; text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .card.total { background: white; border: 1px solid #eee; }
+  .card.done { background: #eef9f2; border: 1px solid #d4efdf; }
+  .card.missing { background: #fef0f0; border: 1px solid #fadbd8; }
+  .card .num { font-size: 28px; font-weight: 800; line-height: 1.2; }
+  .card .label { font-size: 12px; color: #666; margin-top: 6px; font-weight: 500; }
+  .card.done .num { color: #27ae60; }
+  .card.missing .num { color: #e74c3c; }
+
+  .section {
+    background: white; margin: 0 12px 16px;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .section-header {
+    padding: 16px; font-weight: 700; font-size: 15px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+  .section-header.missing-h { color: #e74c3c; }
+  .section-header.done-h { color: #27ae60; }
+
+  .student-item {
+    display: flex; align-items: center; padding: 14px 16px;
+    border-bottom: 1px solid #f8f8f8; font-size: 15px;
+  }
+  .student-item:last-child { border-bottom: none; }
+  .badge {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; margin-right: 12px; flex-shrink: 0;
+  }
+  .badge.miss { background: #fef0f0; color: #e74c3c; }
+  .badge.done { background: #eef9f2; color: #27ae60; }
+  
+  .student-info { display: flex; align-items: baseline; }
+  .student-num { color: #999; font-size: 13px; font-weight: 500; min-width: 22px; }
+  .student-name { font-weight: 500; color: #333; }
+  
+  .submit-record { margin-left: auto; text-align: right; }
+  .course-tag { font-size: 11px; background: #f0f0f0; color: #666; padding: 2px 6px; border-radius: 4px; margin-bottom: 4px; display: inline-block; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .submit-time { font-size: 12px; color: #aaa; }
+
+  .empty { padding: 30px; text-align: center; color: #999; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="app-container">
+
+<div class="header">
+  <h1>📋 缺考查询 (上学期)</h1>
+  <p>三年级英语测验 · 沈老师专用</p>
+</div>
+
+<div class="controls">
+  <label>选择查询课程范围</label>
+  <select id="courseSelect">
+    <option value="">-- 请选择要过滤的课程 --</option>
+    <option value="u1l1">Unit 1 Lesson 1</option>
+    <option value="u1l2">Unit 1 Lesson 2</option>
+    <option value="u1l3">Unit 1 Lesson 3</option>
+    <option value="u1l4">Unit 1 Lesson 4</option>
+    <option value="u2l1">Unit 2 Lesson 1</option>
+    <option value="u2l2">Unit 2 Lesson 2</option>
+    <option value="u2l3">Unit 2 Lesson 3</option>
+    <option value="u2l4">Unit 2 Lesson 4</option>
+    <option value="u3l1">Unit 3 Lesson 1</option>
+    <option value="u3l2">Unit 3 Lesson 2</option>
+    <option value="u3l3">Unit 3 Lesson 3</option>
+    <option value="u3l4">Unit 3 Lesson 4</option>
+    <option value="u4l1">Unit 4 Lesson 1</option>
+    <option value="u4l2">Unit 4 Lesson 2</option>
+    <option value="u4l3">Unit 4 Lesson 3</option>
+    <option value="u4l4">Unit 4 Lesson 4</option>
+    <option value="review 1">Review 1</option>
+    <option value="review 2">Review 2</option>
+    <option value="期末">期末综合测验 (Written & Speaking)</option>
+  </select>
+  <button class="btn-query" onclick="query()">🔍 查询缺考情况</button>
+</div>
+
+<div id="output">
+  <!-- 初始状态提示 -->
+  <div class="empty">👆 请选择课程并点击查询</div>
+</div>
+
+</div> <!-- end container -->
+
+<script>
+// =============== 全班名单 (27人, 带座号) ===============
+var STUDENTS = [
+  {id: 1, name: '张宇豪'}, {id: 2, name: '张佳寒'}, {id: 3, name: '张睿渊'},
+  {id: 4, name: '张羽韬'}, {id: 5, name: '张美茹'}, {id: 6, name: '张嘉钦'},
+  {id: 7, name: '卢梦婷'}, {id: 8, name: '张悦萱'}, {id: 9, name: '张语涵'},
+  {id: 10, name: '张英豪'}, {id: 11, name: '张志鹏'}, {id: 12, name: '张智杰'},
+  {id: 13, name: '张梓婷'}, {id: 14, name: '张品琪'}, {id: 15, name: '张诺依'},
+  {id: 16, name: '张雨泽'}, {id: 17, name: '张依彤'}, {id: 18, name: '张艺楠'},
+  {id: 19, name: '张思彤'}, {id: 20, name: '张子豪'}, {id: 21, name: '张梓亦'},
+  {id: 22, name: '张皓鑫'}, {id: 23, name: '张雨欣'}, {id: 24, name: '张如欣'},
+  {id: 25, name: '张柏涵'}, {id: 26, name: '张梓纯'}, {id: 27, name: '张泽鑫'}
+];
+
+// =============== 第一学期 Google Apps Script 代理 ===============
+var GAS_PROXY = 'https://script.google.com/macros/s/AKfycbwlQKStdeQNriQX0uH8GEf1ieBNMl1cvY-oGtjiewshVPkM_T3SgzlP0Og9AqHUju7TmQ/exec';
+
+function query() {
+  var course = document.getElementById('courseSelect').value;
+  if (!course) { alert('请先选择课程！'); return; }
+
+  // 显示加载中，带点旋转动画
+  document.getElementById('output').innerHTML = '<div class="loading"><span class="spinner">⏳</span> 正在向 Google 表格拉取数据...</div>';
+
+  var s = document.createElement('script');
+  
+  // 第一学期的 GAS 端已经做了智能匹配，直接传 course={u1l1} 即可
+  s.src = GAS_PROXY + '?course=' + encodeURIComponent(course) + '&callback=jsonpCallback&t=' + new Date().getTime();
+  
+  // 处理错误超时
+  var timeout = setTimeout(function() {
+    document.getElementById('output').innerHTML = '<div class="loading">❌ 请求超时，可能是网络问题或服务端未响应。</div>';
+    window.jsonpCallback = function(){}; // 避免超时后回来报错
+  }, 20000);
+
+  window.jsonpCallback = function(resp) {
+    clearTimeout(timeout);
+    renderResult(resp, course);
+  };
+
+  document.body.appendChild(s);
+}
+
+function renderResult(resp, course) {
+  if (!resp || resp.code !== 0) {
+    document.getElementById('output').innerHTML = '<div class="loading">❌ 查询失败: ' + (resp && resp.msg || '未知错误') + '</div>';
+    return;
+  }
+
+  var records = resp.data || [];
+  
+  // 记录每个学生提交的最佳/最近一条记录
+  var submitted = {};
+  records.forEach(function(r) {
+    // GAS端已经帮我们清洗过了纯净的 studentName 和 time
+    var name = r.studentName;
+    if (name) {
+      // 如果多次提交，记录格式更好的一条或保留第一条遇见的
+      submitted[name] = { time: formatDate(r.time), rawCourse: r.course };
+    }
+  });
+
+  var doneList = [], missList = [];
+  STUDENTS.forEach(function(s) {
+    if (submitted[s.name]) {
+      doneList.push({id: s.id, name: s.name, time: submitted[s.name].time, originalCourse: submitted[s.name].rawCourse });
+    } else {
+      missList.push(s);
+    }
+  });
+
+  var html = '';
+
+  // 汇总卡片
+  html += '<div class="summary-cards">';
+  html += '<div class="card total"><div class="num">' + STUDENTS.length + '</div><div class="label">全班总人数</div></div>';
+  html += '<div class="card done"><div class="num">' + doneList.length + '</div><div class="label">已考 ✅</div></div>';
+  html += '<div class="card missing"><div class="num">' + missList.length + '</div><div class="label">未考 ❌</div></div>';
+  html += '</div>';
+
+  // 未考名单 (红色醒目)
+  html += '<div class="section">';
+  html += '<div class="section-header missing-h">❌ 尚未参加测验（' + missList.length + '人）</div>';
+  if (missList.length === 0) {
+    html += '<div class="empty">🎉 全班同学都已完成测试！</div>';
+  } else {
+    missList.forEach(function(s) {
+      html += '<div class="student-item">' +
+              '<div class="badge miss">!</div>' +
+              '<div class="student-info">' +
+              '<span class="student-num">' + s.id + '. </span>' +
+              '<span class="student-name">' + s.name + '</span>' +
+              '</div></div>';
+    });
+  }
+  html += '</div>';
+
+  // 已考名单 (绿色)
+  html += '<div class="section">';
+  html += '<div class="section-header done-h">✅ 已完成测验（' + doneList.length + '人）</div>';
+  if (doneList.length === 0) {
+    html += '<div class="empty">暂无已考记录</div>';
+  } else {
+    doneList.forEach(function(s) {
+      // 提取原始课程的简写比如 "口语" / "笔试" 用于展示
+      var typeStr = "";
+      if (s.originalCourse.indexOf("口语") >= 0 || s.originalCourse.indexOf("Speaking") >= 0) typeStr = "🗣️口语";
+      else if (s.originalCourse.indexOf("笔试") >= 0 || s.originalCourse.indexOf("Written") >= 0) typeStr = "📝笔试";
+      else typeStr = "完成";
+
+      html += '<div class="student-item">' +
+              '<div class="badge done">✓</div>' +
+              '<div class="student-info">' +
+              '<span class="student-num">' + s.id + '. </span>' + 
+              '<span class="student-name">' + s.name + '</span>' +
+              '</div>' +
+              '<div class="submit-record">' +
+              '<div class="course-tag">' + typeStr + '</div>' + 
+              '<div class="submit-time">' + s.time + '</div>' +
+              '</div></div>';
+    });
+  }
+  html += '</div>';
+
+  document.getElementById('output').innerHTML = html;
+}
+
+// 整理 Google Sheet 长时间字符串：Tue Jan 20 2026 15:10:24 GMT+0800 -> 01-20 15:10
+function formatDate(t) {
+  if (!t) return '未知时间';
+  try {
+    var d = new Date(t);
+    if (isNaN(d.getTime())) return t;
+    var mo = String(d.getMonth()+1).padStart(2, '0');
+    var da = String(d.getDate()).padStart(2, '0');
+    var ho = String(d.getHours()).padStart(2, '0');
+    var mi = String(d.getMinutes()).padStart(2, '0');
+    return mo + '-' + da + ' ' + ho + ':' + mi;
+  } catch(e) {
+    return t;
+  }
+}
+</script>
+</body>
+</html>
