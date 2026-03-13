@@ -179,23 +179,17 @@ function query() {
   // 显示加载中，带点旋转动画
   document.getElementById('output').innerHTML = '<div class="loading"><span class="spinner">⏳</span> 正在向 Google 表格拉取数据...</div>';
 
-  var s = document.createElement('script');
-  
   // 第一学期的 GAS 端已经做了智能匹配，直接传 course={u1l1} 即可
-  s.src = GAS_PROXY + '?course=' + encodeURIComponent(course) + '&callback=jsonpCallback&t=' + new Date().getTime();
+  var url = GAS_PROXY + '?course=' + encodeURIComponent(course);
   
-  // 处理错误超时
-  var timeout = setTimeout(function() {
-    document.getElementById('output').innerHTML = '<div class="loading">❌ 请求超时，可能是网络问题或服务端未响应。</div>';
-    window.jsonpCallback = function(){}; // 避免超时后回来报错
-  }, 20000);
-
-  window.jsonpCallback = function(resp) {
-    clearTimeout(timeout);
-    renderResult(resp, course);
-  };
-
-  document.body.appendChild(s);
+  fetch(url)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      renderResult(data, course);
+    })
+    .catch(function(err) {
+      document.getElementById('output').innerHTML = '<div class="loading">❌ 请求超时或网络错误（注意：第一学期查询需要开启 VPN）</div>';
+    });
 }
 
 function renderResult(resp, course) {
